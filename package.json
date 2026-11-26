@@ -22,6 +22,7 @@
     "dev:bg": "astro dev --background",
     "build": "astro build",
     "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs",
     "check": "astro check",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
