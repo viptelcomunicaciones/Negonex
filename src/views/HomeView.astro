@@ -1,12 +1,19 @@
 ---
-/**
- * Home page (starter). Replace this with your own content.
- * Rendered by src/pages/index.astro and src/pages/[lang]/index.astro.
- */
 import PageLayout from '@/layouts/PageLayout.astro';
+import Hero from '@/components/hero/Hero.astro';
+import Band from '@/components/blocks/Band.astro';
+import FeatureGrid from '@/components/blocks/FeatureGrid.astro';
+import Steps from '@/components/blocks/Steps.astro';
+import Pricing from '@/components/blocks/Pricing.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import Badge from '@/components/ui/data-display/Badge/Badge.astro';
 import Button from '@/components/ui/form/Button/Button.astro';
 import Icon from '@/components/ui/primitives/Icon/Icon.astro';
-import siteConfig from '@/config/site.config';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import AnimatedStatsBand from '@/components/patterns/AnimatedStatsBand.astro';
+import InterculturalSandbox, { type SandboxScenario } from '@/components/patterns/InterculturalSandbox';
+import MotionInit from '@/components/patterns/MotionInit.astro';
+import { createOrganizationSchema } from '@/lib/schema';
 import { localizeRoute, useTranslations, type Locale } from '@/i18n';
 
 interface Props {
@@ -15,29 +22,482 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const [before, after] = t('starter.description').split('{file}');
+
+const contactHref = localizeRoute('contact', locale);
+const platformHref = localizeRoute('platform', locale);
+const pricingHref = localizeRoute('pricing', locale);
+
+const sandboxLabels = {
+  eyebrow: t('home.sandbox.eyebrow'),
+  heading: t('home.sandbox.heading'),
+  subheading: t('home.sandbox.subheading'),
+  scenarioSelectorLabel: t('home.sandbox.scenarioSelectorLabel'),
+  marketSelectorLabel: t('home.sandbox.marketSelectorLabel'),
+  viewAdaptedTab: t('home.sandbox.viewAdaptedTab'),
+  viewCompareTab: t('home.sandbox.viewCompareTab'),
+  senderBadge: t('home.sandbox.senderBadge'),
+  receiverBadge: t('home.sandbox.receiverBadge'),
+  processingLabel: t('home.sandbox.processingLabel'),
+  buyerReceivesPrefix: t('home.sandbox.buyerReceivesPrefix'),
+  replayLabel: t('home.sandbox.replayLabel'),
+  sourceTitle: t('home.sandbox.sourceTitle'),
+  literalTitle: t('home.sandbox.literalTitle'),
+  literalBadge: t('home.sandbox.literalBadge'),
+  literalRiskTitle: t('home.sandbox.literalRiskTitle'),
+  adaptedTitle: t('home.sandbox.adaptedTitle'),
+  adaptedBadge: t('home.sandbox.adaptedBadge'),
+  protocolTitle: t('home.sandbox.protocolTitle'),
+  glossLabel: t('home.sandbox.glossLabel'),
+  disclaimer: t('home.sandbox.disclaimer'),
+  ctaLabel: t('home.sandbox.ctaLabel'),
+  ctaHref: contactHref,
+};
+
+const marketNames = {
+  us: t('home.sandbox.marketUsName'),
+  de: t('home.sandbox.marketDeName'),
+  ae: t('home.sandbox.marketAeName'),
+  jp: t('home.sandbox.marketJpName'),
+};
+
+const scenarios: SandboxScenario[] = [
+  {
+    id: 'fob-quote',
+    title: t('home.sandbox.s1Title'),
+    contextTag: t('home.sandbox.s1Context'),
+    sourceLabel: t('home.sandbox.s1SourceLabel'),
+    sourceMessage: t('home.sandbox.s1SourceMessage'),
+    markets: [
+      {
+        id: 'us',
+        code: 'US',
+        marketName: marketNames.us,
+        lang: 'en',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s1UsReg'),
+        registerLabel: t('home.sandbox.s1UsReg'),
+        literalTranslation: t('home.sandbox.s1UsLiteral'),
+        literalRisk: t('home.sandbox.s1UsRisk'),
+        adaptedMessage: t('home.sandbox.s1UsAdapted'),
+        glossNote: t('home.sandbox.s1UsGloss'),
+        protocolBullets: [t('home.sandbox.s1UsB1'), t('home.sandbox.s1UsB2')],
+        channelLabel: t('home.sandbox.s1UsChannel'),
+      },
+      {
+        id: 'de',
+        code: 'DE',
+        marketName: marketNames.de,
+        lang: 'de',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s1DeReg'),
+        registerLabel: t('home.sandbox.s1DeReg'),
+        literalTranslation: t('home.sandbox.s1DeLiteral'),
+        literalRisk: t('home.sandbox.s1DeRisk'),
+        adaptedMessage: t('home.sandbox.s1DeAdapted'),
+        glossNote: t('home.sandbox.s1DeGloss'),
+        protocolBullets: [t('home.sandbox.s1DeB1'), t('home.sandbox.s1DeB2')],
+        channelLabel: t('home.sandbox.s1DeChannel'),
+      },
+      {
+        id: 'ae',
+        code: 'AE',
+        marketName: marketNames.ae,
+        lang: 'ar',
+        dir: 'rtl',
+        languageLabel: t('home.sandbox.s1AeReg'),
+        registerLabel: t('home.sandbox.s1AeReg'),
+        literalTranslation: t('home.sandbox.s1AeLiteral'),
+        literalRisk: t('home.sandbox.s1AeRisk'),
+        adaptedMessage: t('home.sandbox.s1AeAdapted'),
+        glossNote: t('home.sandbox.s1AeGloss'),
+        protocolBullets: [t('home.sandbox.s1AeB1'), t('home.sandbox.s1AeB2')],
+        channelLabel: t('home.sandbox.s1AeChannel'),
+      },
+      {
+        id: 'jp',
+        code: 'JP',
+        marketName: marketNames.jp,
+        lang: 'ja',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s1JpReg'),
+        registerLabel: t('home.sandbox.s1JpReg'),
+        literalTranslation: t('home.sandbox.s1JpLiteral'),
+        literalRisk: t('home.sandbox.s1JpRisk'),
+        adaptedMessage: t('home.sandbox.s1JpAdapted'),
+        glossNote: t('home.sandbox.s1JpGloss'),
+        protocolBullets: [t('home.sandbox.s1JpB1'), t('home.sandbox.s1JpB2')],
+        channelLabel: t('home.sandbox.s1JpChannel'),
+      },
+    ],
+  },
+  {
+    id: 'payment-terms',
+    title: t('home.sandbox.s2Title'),
+    contextTag: t('home.sandbox.s2Context'),
+    sourceLabel: t('home.sandbox.s2SourceLabel'),
+    sourceMessage: t('home.sandbox.s2SourceMessage'),
+    markets: [
+      {
+        id: 'us',
+        code: 'US',
+        marketName: marketNames.us,
+        lang: 'en',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s2UsReg'),
+        registerLabel: t('home.sandbox.s2UsReg'),
+        literalTranslation: t('home.sandbox.s2UsLiteral'),
+        literalRisk: t('home.sandbox.s2UsRisk'),
+        adaptedMessage: t('home.sandbox.s2UsAdapted'),
+        glossNote: t('home.sandbox.s2UsGloss'),
+        protocolBullets: [t('home.sandbox.s2UsB1'), t('home.sandbox.s2UsB2')],
+        channelLabel: t('home.sandbox.s2UsChannel'),
+      },
+      {
+        id: 'de',
+        code: 'DE',
+        marketName: marketNames.de,
+        lang: 'de',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s2DeReg'),
+        registerLabel: t('home.sandbox.s2DeReg'),
+        literalTranslation: t('home.sandbox.s2DeLiteral'),
+        literalRisk: t('home.sandbox.s2DeRisk'),
+        adaptedMessage: t('home.sandbox.s2DeAdapted'),
+        glossNote: t('home.sandbox.s2DeGloss'),
+        protocolBullets: [t('home.sandbox.s2DeB1'), t('home.sandbox.s2DeB2')],
+        channelLabel: t('home.sandbox.s2DeChannel'),
+      },
+      {
+        id: 'ae',
+        code: 'AE',
+        marketName: marketNames.ae,
+        lang: 'ar',
+        dir: 'rtl',
+        languageLabel: t('home.sandbox.s2AeReg'),
+        registerLabel: t('home.sandbox.s2AeReg'),
+        literalTranslation: t('home.sandbox.s2AeLiteral'),
+        literalRisk: t('home.sandbox.s2AeRisk'),
+        adaptedMessage: t('home.sandbox.s2AeAdapted'),
+        glossNote: t('home.sandbox.s2AeGloss'),
+        protocolBullets: [t('home.sandbox.s2AeB1'), t('home.sandbox.s2AeB2')],
+        channelLabel: t('home.sandbox.s2AeChannel'),
+      },
+      {
+        id: 'jp',
+        code: 'JP',
+        marketName: marketNames.jp,
+        lang: 'ja',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s2JpReg'),
+        registerLabel: t('home.sandbox.s2JpReg'),
+        literalTranslation: t('home.sandbox.s2JpLiteral'),
+        literalRisk: t('home.sandbox.s2JpRisk'),
+        adaptedMessage: t('home.sandbox.s2JpAdapted'),
+        glossNote: t('home.sandbox.s2JpGloss'),
+        protocolBullets: [t('home.sandbox.s2JpB1'), t('home.sandbox.s2JpB2')],
+        channelLabel: t('home.sandbox.s2JpChannel'),
+      },
+    ],
+  },
+  {
+    id: 'trade-show',
+    title: t('home.sandbox.s3Title'),
+    contextTag: t('home.sandbox.s3Context'),
+    sourceLabel: t('home.sandbox.s3SourceLabel'),
+    sourceMessage: t('home.sandbox.s3SourceMessage'),
+    markets: [
+      {
+        id: 'us',
+        code: 'US',
+        marketName: marketNames.us,
+        lang: 'en',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s3UsReg'),
+        registerLabel: t('home.sandbox.s3UsReg'),
+        literalTranslation: t('home.sandbox.s3UsLiteral'),
+        literalRisk: t('home.sandbox.s3UsRisk'),
+        adaptedMessage: t('home.sandbox.s3UsAdapted'),
+        glossNote: t('home.sandbox.s3UsGloss'),
+        protocolBullets: [t('home.sandbox.s3UsB1'), t('home.sandbox.s3UsB2')],
+        channelLabel: t('home.sandbox.s3UsChannel'),
+      },
+      {
+        id: 'de',
+        code: 'DE',
+        marketName: marketNames.de,
+        lang: 'de',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s3DeReg'),
+        registerLabel: t('home.sandbox.s3DeReg'),
+        literalTranslation: t('home.sandbox.s3DeLiteral'),
+        literalRisk: t('home.sandbox.s3DeRisk'),
+        adaptedMessage: t('home.sandbox.s3DeAdapted'),
+        glossNote: t('home.sandbox.s3DeGloss'),
+        protocolBullets: [t('home.sandbox.s3DeB1'), t('home.sandbox.s3DeB2')],
+        channelLabel: t('home.sandbox.s3DeChannel'),
+      },
+      {
+        id: 'ae',
+        code: 'AE',
+        marketName: marketNames.ae,
+        lang: 'ar',
+        dir: 'rtl',
+        languageLabel: t('home.sandbox.s3AeReg'),
+        registerLabel: t('home.sandbox.s3AeReg'),
+        literalTranslation: t('home.sandbox.s3AeLiteral'),
+        literalRisk: t('home.sandbox.s3AeRisk'),
+        adaptedMessage: t('home.sandbox.s3AeAdapted'),
+        glossNote: t('home.sandbox.s3AeGloss'),
+        protocolBullets: [t('home.sandbox.s3AeB1'), t('home.sandbox.s3AeB2')],
+        channelLabel: t('home.sandbox.s3AeChannel'),
+      },
+      {
+        id: 'jp',
+        code: 'JP',
+        marketName: marketNames.jp,
+        lang: 'ja',
+        dir: 'ltr',
+        languageLabel: t('home.sandbox.s3JpReg'),
+        registerLabel: t('home.sandbox.s3JpReg'),
+        literalTranslation: t('home.sandbox.s3JpLiteral'),
+        literalRisk: t('home.sandbox.s3JpRisk'),
+        adaptedMessage: t('home.sandbox.s3JpAdapted'),
+        glossNote: t('home.sandbox.s3JpGloss'),
+        protocolBullets: [t('home.sandbox.s3JpB1'), t('home.sandbox.s3JpB2')],
+        channelLabel: t('home.sandbox.s3JpChannel'),
+      },
+    ],
+  },
+];
+
+const pipelineRows = [
+  { icon: 'message-square', label: t('home.hero.asideStep1Label'), value: t('home.hero.asideStep1Value') },
+  { icon: 'cpu', label: t('home.hero.asideStep2Label'), value: t('home.hero.asideStep2Value') },
+  { icon: 'globe', label: t('home.hero.asideStep3Label'), value: t('home.hero.asideStep3Value') },
+  { icon: 'database', label: t('home.hero.asideStep4Label'), value: t('home.hero.asideStep4Value') },
+];
 ---
 
-<PageLayout title={t('starter.title')} description={siteConfig.description} searchable={false}>
-  <section class="py-24 md:py-32">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <h1 class="font-display text-foreground text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-        {t('starter.heading')} <span class="text-brand-500">{siteConfig.name}</span>
-      </h1>
-      <p class="text-foreground-muted mx-auto mt-6 max-w-2xl text-lg">
-        {before}<code class="bg-secondary text-foreground rounded px-2 py-1 text-sm">src/views/HomeView.astro</code>{after}
-      </p>
-      <p class="text-foreground-muted mx-auto mt-3 max-w-2xl">{t('starter.agent')}</p>
-      <div class="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
-        <Button href={localizeRoute('blog', locale)} size="lg">
-          {t('starter.readBlog')}
-          <Icon name="arrow-right" size="sm" />
-        </Button>
-        <Button href="https://docs.astro.build" target="_blank" variant="outline" size="lg">
-          {t('starter.astroDocs')}
-          <Icon name="external-link" size="sm" />
-        </Button>
+<PageLayout title={t('meta.home.title')} description={t('meta.home.description')}>
+  <MotionInit />
+  <JsonLd schema={createOrganizationSchema()} />
+
+  <Hero layout="split" size="md" class="negonex-hero" data-pause-offscreen="">
+    <Badge slot="badge" variant="brand" pill>
+      {t('home.hero.badge')}
+    </Badge>
+
+    <h1 slot="title" class="negonex-h1">
+      {t('home.hero.title')}{' '}
+      <span class="text-brand-600 dark:text-brand-400">{t('home.hero.titleHighlight')}</span>
+    </h1>
+
+    <p slot="description">{t('home.hero.lead')}</p>
+
+    <Fragment slot="actions">
+      <Button variant="brand" size="lg" trailingIcon="arrow-down" href="#sandbox">
+        {t('home.hero.primaryCta')}
+      </Button>
+      <Button variant="outline" size="lg" trailingIcon="arrow-right" href={contactHref}>
+        {t('home.hero.secondaryCta')}
+      </Button>
+    </Fragment>
+
+    <aside slot="aside" class="bg-card border-border rounded-2xl border p-6 shadow-md">
+      <div class="border-border border-b pb-4">
+        <h2 class="font-display text-foreground text-lg font-bold">{t('home.hero.asideTitle')}</h2>
+        <p class="text-foreground-muted mt-1 text-sm">{t('home.hero.asideSubtitle')}</p>
+      </div>
+      <ol class="divide-border divide-y">
+        {
+          pipelineRows.map((row) => (
+            <li class="pipeline-step flex items-start gap-3 py-3.5">
+              <div class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 mt-0.5 rounded-lg p-2">
+                <Icon name={row.icon} size="sm" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-foreground flex items-center gap-2 text-xs font-semibold tracking-wide uppercase">
+                  <span class="pipeline-dot bg-brand-500 inline-block h-2 w-2 shrink-0 rounded-full" aria-hidden="true" />
+                  <span>{row.label}</span>
+                </p>
+                <p class="text-foreground-secondary mt-0.5 text-sm leading-snug">{row.value}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </aside>
+  </Hero>
+
+  <AnimatedStatsBand
+    tone="secondary"
+    pad="sm"
+    stats={[
+      {
+        value: t('home.stats.languagesValue'),
+        label: t('home.stats.languagesLabel'),
+        countTo: 95,
+        prefix: locale === 'es' ? '+' : '',
+        suffix: locale === 'en' ? '+' : '',
+      },
+      {
+        value: t('home.stats.slaValue'),
+        label: t('home.stats.slaLabel'),
+        countTo: 99.9,
+        suffix: '%',
+        decimals: 1,
+      },
+      { value: t('home.stats.availabilityValue'), label: t('home.stats.availabilityLabel') },
+      { value: t('home.stats.deploymentValue'), label: t('home.stats.deploymentLabel') },
+    ]}
+  />
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('home.valuePillars.eyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('home.valuePillars.title')}
+    lead={t('home.valuePillars.lead')}
+  >
+    <FeatureGrid
+      bare
+      columns={2}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'languages', title: t('home.valuePillars.p1Title'), body: t('home.valuePillars.p1Body') },
+        { icon: 'plug-zap', title: t('home.valuePillars.p2Title'), body: t('home.valuePillars.p2Body') },
+        { icon: 'clock', title: t('home.valuePillars.p3Title'), body: t('home.valuePillars.p3Body') },
+        { icon: 'shield-check', title: t('home.valuePillars.p4Title'), body: t('home.valuePillars.p4Body') },
+      ]}
+    />
+  </Band>
+
+  <Band id="sandbox" tone="secondary" width="wide" centered data-reveal="">
+    <InterculturalSandbox client:visible labels={sandboxLabels} scenarios={scenarios} />
+  </Band>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('home.steps.eyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('home.steps.title')}
+    lead={t('home.steps.lead')}
+  >
+    <Steps
+      bare
+      layout="row"
+      class="negonex-steps"
+      data-reveal-stagger=""
+      items={[
+        { title: t('home.steps.s1Title'), body: t('home.steps.s1Body') },
+        { title: t('home.steps.s2Title'), body: t('home.steps.s2Body') },
+        { title: t('home.steps.s3Title'), body: t('home.steps.s3Body') },
+        { title: t('home.steps.s4Title'), body: t('home.steps.s4Body') },
+      ]}
+    />
+  </Band>
+
+  <Pricing
+    tone="secondary"
+    eyebrow={t('home.pricingPreview.eyebrow')}
+    title={t('home.pricingPreview.title')}
+    lead={t('home.pricingPreview.lead')}
+    note={t('home.pricingPreview.note')}
+    class="negonex-reveal-cards negonex-interactive-cards"
+    plans={[
+      {
+        name: t('home.pricingPreview.starterName'),
+        price: t('home.pricingPreview.starterPrice'),
+        period: t('home.pricingPreview.starterPeriod'),
+        badge: t('home.pricingPreview.starterBadge'),
+        description: t('home.pricingPreview.starterDesc'),
+        features: [
+          t('home.pricingPreview.starterF1'),
+          t('home.pricingPreview.starterF2'),
+          t('home.pricingPreview.starterF3'),
+          t('home.pricingPreview.starterF4'),
+        ],
+        cta: { label: t('home.pricingPreview.starterCta'), href: pricingHref },
+      },
+      {
+        name: t('home.pricingPreview.enterpriseName'),
+        price: t('home.pricingPreview.enterprisePrice'),
+        period: t('home.pricingPreview.enterprisePeriod'),
+        badge: t('home.pricingPreview.enterpriseBadge'),
+        highlighted: true,
+        description: t('home.pricingPreview.enterpriseDesc'),
+        features: [
+          t('home.pricingPreview.enterpriseF1'),
+          t('home.pricingPreview.enterpriseF2'),
+          t('home.pricingPreview.enterpriseF3'),
+          t('home.pricingPreview.enterpriseF4'),
+        ],
+        cta: { label: t('home.pricingPreview.enterpriseCta'), href: pricingHref },
+      },
+    ]}
+  />
+
+  <Band
+    tone="invert"
+    centered
+    data-reveal=""
+    eyebrow={t('home.securityBand.eyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('home.securityBand.title')}
+    lead={t('home.securityBand.lead')}
+  >
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-3" data-reveal-stagger="">
+      <div class="border-border-invert card-interactive rounded-xl border p-6">
+        <span class="bg-brand-500/15 text-brand-400 mb-4 grid size-10 place-items-center rounded-lg">
+          <Icon name="server" size="md" />
+        </span>
+        <h3 class="font-display text-on-invert text-lg font-semibold">{t('home.securityBand.item1Title')}</h3>
+        <p class="text-on-invert-muted mt-2 text-sm leading-relaxed">{t('home.securityBand.item1Body')}</p>
+      </div>
+      <div class="border-border-invert card-interactive rounded-xl border p-6">
+        <span class="bg-brand-500/15 text-brand-400 mb-4 grid size-10 place-items-center rounded-lg">
+          <Icon name="lock" size="md" />
+        </span>
+        <h3 class="font-display text-on-invert text-lg font-semibold">{t('home.securityBand.item2Title')}</h3>
+        <p class="text-on-invert-muted mt-2 text-sm leading-relaxed">{t('home.securityBand.item2Body')}</p>
+      </div>
+      <div class="border-border-invert card-interactive rounded-xl border p-6">
+        <span class="bg-brand-500/15 text-brand-400 mb-4 grid size-10 place-items-center rounded-lg">
+          <Icon name="file-check" size="md" />
+        </span>
+        <h3 class="font-display text-on-invert text-lg font-semibold">{t('home.securityBand.item3Title')}</h3>
+        <p class="text-on-invert-muted mt-2 text-sm leading-relaxed">{t('home.securityBand.item3Body')}</p>
       </div>
     </div>
-  </section>
+    <div class="mt-8 flex justify-center">
+      <Button variant="outline" href={platformHref} trailingIcon="arrow-right">
+        {t('home.securityBand.linkLabel')}
+      </Button>
+    </div>
+  </Band>
+
+  <CtaBand
+    tone="brand"
+    eyebrow={t('home.cta.eyebrow')}
+    title={t('home.cta.title')}
+    lead={t('home.cta.lead')}
+    data-reveal=""
+  >
+    <Button variant="primary" size="lg" href={contactHref} trailingIcon="arrow-right">
+      {t('home.cta.primary')}
+    </Button>
+    <Button variant="outline" size="lg" href={pricingHref}>
+      {t('home.cta.secondary')}
+    </Button>
+  </CtaBand>
 </PageLayout>
+
+<style is:global>
+  .negonex-hero div > h1.negonex-h1 {
+    font-size: clamp(2rem, 3.2vw, 3.125rem);
+    line-height: 1.12;
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Band from '@/components/blocks/Band.astro';
+import FeatureGrid from '@/components/blocks/FeatureGrid.astro';
+import Timeline from '@/components/blocks/Timeline.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import Avatar from '@/components/ui/data-display/Avatar/Avatar.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import ValueChainSection from '@/components/patterns/ValueChainSection.astro';
+import MotionInit from '@/components/patterns/MotionInit.astro';
+import { localizeRoute, useTranslations, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const homeHref = localizeRoute('home', locale);
+const contactHref = localizeRoute('contact', locale);
+
+const founders = [
+  { name: 'Angie Jimena Rodríguez Velásquez', initials: 'AR' },
+  { name: 'César Camilo Barrero García', initials: 'CB' },
+  { name: 'Juan David Vélez Manjarrez', initials: 'JV' },
+  { name: 'Juan Diego Restrepo Galindo', initials: 'JR' },
+  { name: 'Rafael Ricardo Giraldo Martínez', initials: 'RG' },
+];
+---
+
+<PageLayout title={t('aboutPage.title')} description={t('aboutPage.description')}>
+  <MotionInit />
+  <PageHero
+    size="md"
+    tone="secondary"
+    eyebrow={t('aboutPage.heroEyebrow')}
+    title={t('aboutPage.heroTitle')}
+    lead={t('aboutPage.heroLead')}
+    class="negonex-page-hero"
+  >
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[{ label: t('nav.home'), href: homeHref }, { label: t('nav.about') }]}
+    />
+  </PageHero>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('aboutPage.purposeEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('aboutPage.purposeTitle')}
+  >
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2" data-reveal-stagger="">
+      <div class="bg-card border-border card-interactive rounded-xl border p-6">
+        <div class="mb-3 flex items-center gap-3">
+          <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-10 shrink-0 place-items-center rounded-lg">
+            <Icon name="bot" size="md" />
+          </span>
+          <h3 class="font-display text-foreground text-lg font-bold">{t('aboutPage.purposeCard1Title')}</h3>
+        </div>
+        <p class="text-foreground-secondary text-base leading-relaxed">{t('aboutPage.purposeP1')}</p>
+      </div>
+      <div class="bg-card border-border card-interactive rounded-xl border p-6">
+        <div class="mb-3 flex items-center gap-3">
+          <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-10 shrink-0 place-items-center rounded-lg">
+            <Icon name="globe" size="md" />
+          </span>
+          <h3 class="font-display text-foreground text-lg font-bold">{t('aboutPage.purposeCard2Title')}</h3>
+        </div>
+        <p class="text-foreground-secondary text-base leading-relaxed">{t('aboutPage.purposeP2')}</p>
+      </div>
+    </div>
+  </Band>
+
+  <Band
+    tone="secondary"
+    centered
+    data-reveal=""
+    eyebrow={t('aboutPage.foundersEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('aboutPage.foundersTitle')}
+    lead={t('aboutPage.foundersLead')}
+  >
+    <div class="flex flex-wrap justify-center gap-4" data-reveal-stagger="">
+      {
+        founders.map((founder) => (
+          <div class="bg-card border-border card-interactive flex w-full items-center gap-4 rounded-xl border p-5 sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">
+            <Avatar alt={founder.name} fallback={founder.initials} size="lg" />
+            <div class="min-w-0">
+              <h3 class="font-display text-foreground text-base leading-snug font-semibold">{founder.name}</h3>
+              <p class="text-foreground-muted mt-1 text-xs font-medium">{t('aboutPage.founderRole')}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </Band>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('aboutPage.rolesEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('aboutPage.rolesTitle')}
+    lead={t('aboutPage.rolesLead')}
+  >
+    <FeatureGrid
+      bare
+      columns={2}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'terminal', title: t('aboutPage.role1Title'), body: t('aboutPage.role1Body') },
+        { icon: 'languages', title: t('aboutPage.role2Title'), body: t('aboutPage.role2Body') },
+        { icon: 'briefcase', title: t('aboutPage.role3Title'), body: t('aboutPage.role3Body') },
+        { icon: 'pie-chart', title: t('aboutPage.role4Title'), body: t('aboutPage.role4Body') },
+      ]}
+    />
+  </Band>
+
+  <ValueChainSection
+    tone="secondary"
+    eyebrow={t('aboutPage.valueChain.eyebrow')}
+    title={t('aboutPage.valueChain.title')}
+    lead={t('aboutPage.valueChain.lead')}
+    supportHeading={t('aboutPage.valueChain.supportHeading')}
+    primaryHeading={t('aboutPage.valueChain.primaryHeading')}
+    marginHeading={t('aboutPage.valueChain.marginHeading')}
+    supportActivities={[
+      { icon: 'landmark', title: t('aboutPage.valueChain.sup1Title'), body: t('aboutPage.valueChain.sup1Body') },
+      { icon: 'users', title: t('aboutPage.valueChain.sup2Title'), body: t('aboutPage.valueChain.sup2Body') },
+      { icon: 'cpu', title: t('aboutPage.valueChain.sup3Title'), body: t('aboutPage.valueChain.sup3Body') },
+      { icon: 'cloud', title: t('aboutPage.valueChain.sup4Title'), body: t('aboutPage.valueChain.sup4Body') },
+    ]}
+    primaryActivities={[
+      { icon: 'file-text', title: t('aboutPage.valueChain.pri1Title'), body: t('aboutPage.valueChain.pri1Body') },
+      { icon: 'bot', title: t('aboutPage.valueChain.pri2Title'), body: t('aboutPage.valueChain.pri2Body') },
+      { icon: 'plug', title: t('aboutPage.valueChain.pri3Title'), body: t('aboutPage.valueChain.pri3Body') },
+      { icon: 'megaphone', title: t('aboutPage.valueChain.pri4Title'), body: t('aboutPage.valueChain.pri4Body') },
+      { icon: 'activity', title: t('aboutPage.valueChain.pri5Title'), body: t('aboutPage.valueChain.pri5Body') },
+    ]}
+    marginMetrics={[
+      t('aboutPage.valueChain.m1'),
+      t('aboutPage.valueChain.m2'),
+      t('aboutPage.valueChain.m3'),
+      t('aboutPage.valueChain.m4'),
+    ]}
+  />
+
+  <Band
+    width="narrow"
+    centered
+    data-reveal=""
+    eyebrow={t('aboutPage.roadmapEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('aboutPage.roadmapTitle')}
+    lead={t('aboutPage.roadmapLead')}
+  >
+    <Timeline
+      bare
+      class="negonex-reveal-timeline"
+      items={[
+        { date: t('aboutPage.rm1Date'), title: t('aboutPage.rm1Title'), body: t('aboutPage.rm1Body') },
+        { date: t('aboutPage.rm2Date'), title: t('aboutPage.rm2Title'), body: t('aboutPage.rm2Body') },
+        { date: t('aboutPage.rm3Date'), title: t('aboutPage.rm3Title'), body: t('aboutPage.rm3Body') },
+      ]}
+    />
+  </Band>
+
+  <CtaBand
+    tone="brand"
+    eyebrow={t('aboutPage.ctaEyebrow')}
+    title={t('aboutPage.ctaTitle')}
+    lead={t('aboutPage.ctaLead')}
+    data-reveal=""
+  >
+    <Button variant="primary" size="lg" href={contactHref} trailingIcon="arrow-right">
+      {t('aboutPage.ctaButton')}
+    </Button>
+  </CtaBand>
+</PageLayout>

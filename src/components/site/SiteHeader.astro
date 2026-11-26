@@ -1,15 +1,41 @@
 ---
 /**
- * Your site's header. Every layout renders this file, so a change here reaches
- * every page, and upgrades never overwrite it.
- *
- * Set defaults on <Header /> below, or replace it with your own markup. If your
- * header isn't fixed, or isn't 4rem tall, set --header-offset in your theme.
+ * Site header for NegoNEX AI.
+ * Rendered by every layout; upgrades never overwrite this file.
  */
 import type { ComponentProps } from 'astro/types';
 import Header from '@/components/layout/Header.astro';
+import { getLocale, localizeRoute, useTranslations } from '@/i18n';
 
 type Props = ComponentProps<typeof Header>;
+
+const locale = getLocale(Astro);
+const t = useTranslations(locale);
 ---
 
-<Header position="fixed" size="lg" showActiveState showCta {...Astro.props} />
+<Header
+  position="fixed"
+  size="md"
+  breakpoint="lg"
+  showActiveState
+  showCta
+  cta={{ label: t('nav.demoCta'), href: localizeRoute('contact', locale) }}
+  class="negonex-header"
+  {...Astro.props}
+/>
+
+<style is:global>
+  .negonex-header > div > a > span {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 639px) {
+    .negonex-header > div:first-child > a > span {
+      font-size: 1.05rem;
+    }
+
+    .negonex-header > div:first-child > div:last-child > a {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,192 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import FeatureGrid from '@/components/blocks/FeatureGrid.astro';
+import Band from '@/components/blocks/Band.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import MotionInit from '@/components/patterns/MotionInit.astro';
+import { localizeRoute, useTranslations, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const homeHref = localizeRoute('home', locale);
+const contactHref = localizeRoute('contact', locale);
+const pricingHref = localizeRoute('pricing', locale);
+
+const integrationPoints = [
+  t('platformPage.integrationsPoints.p1'),
+  t('platformPage.integrationsPoints.p2'),
+  t('platformPage.integrationsPoints.p3'),
+  t('platformPage.integrationsPoints.p4'),
+  t('platformPage.integrationsPoints.p5'),
+];
+
+const stackBadges = [
+  'WhatsApp Business Cloud API',
+  'Chatwoot CE',
+  'ERPNext CRM',
+  'n8n Docker',
+  'Python FastAPI',
+  'Salesforce',
+  'HubSpot',
+  'SAP',
+  'Odoo',
+  'WeChat / LINE',
+];
+---
+
+<PageLayout title={t('platformPage.title')} description={t('platformPage.description')}>
+  <MotionInit />
+  <PageHero
+    eyebrow={t('platformPage.heroEyebrow')}
+    title={t('platformPage.heroTitle')}
+    lead={t('platformPage.heroLead')}
+    tone="secondary"
+    class="negonex-page-hero"
+  >
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[{ label: t('nav.home'), href: homeHref }, { label: t('nav.platform') }]}
+    />
+    <div class="flex flex-wrap justify-center gap-3">
+      <Button variant="brand" size="lg" href={contactHref} trailingIcon="arrow-right">
+        {t('nav.demoCta')}
+      </Button>
+      <Button variant="outline" size="lg" href={pricingHref}>
+        {t('nav.pricing')}
+      </Button>
+    </div>
+  </PageHero>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('platformPage.llmEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('platformPage.llmTitle')}
+    lead={t('platformPage.llmLead')}
+  >
+    <FeatureGrid
+      bare
+      columns={3}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'languages', title: t('platformPage.llmItems.i1Title'), body: t('platformPage.llmItems.i1Body') },
+        { icon: 'globe', title: t('platformPage.llmItems.i2Title'), body: t('platformPage.llmItems.i2Body') },
+        { icon: 'sparkles', title: t('platformPage.llmItems.i3Title'), body: t('platformPage.llmItems.i3Body') },
+      ]}
+    />
+  </Band>
+
+  <Band
+    tone="secondary"
+    centered
+    data-reveal=""
+    eyebrow={t('platformPage.integrationsEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('platformPage.integrationsTitle')}
+    lead={t('platformPage.integrationsLead')}
+  >
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start">
+      <ul class="space-y-3 lg:col-span-7" data-reveal-stagger="">
+        {
+          integrationPoints.map((point) => (
+            <li class="bg-card border-border card-interactive flex items-start gap-3 rounded-xl border p-4">
+              <Icon name="check-circle-2" size="md" class="text-brand-600 dark:text-brand-400 mt-0.5 shrink-0" />
+              <span class="text-foreground text-sm leading-relaxed">{point}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="bg-card border-border card-interactive rounded-2xl border p-6 shadow-sm lg:col-span-5" data-reveal="">
+        <div class="flex items-center gap-3">
+          <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-10 shrink-0 place-items-center rounded-lg">
+            <Icon name="blocks" size="md" />
+          </span>
+          <h3 class="font-display text-foreground text-lg font-bold">{t('platformPage.middlewareCardTitle')}</h3>
+        </div>
+        <div class="mt-5 flex flex-wrap gap-2" data-reveal-stagger="">
+          {
+            stackBadges.map((item) => (
+              <span class="bg-background-secondary text-foreground-secondary border-border rounded-md border px-3 py-1.5 font-mono text-xs font-medium">
+                {item}
+              </span>
+            ))
+          }
+        </div>
+        <div class="mt-6">
+          <Button variant="outline" fullWidth href={pricingHref} trailingIcon="arrow-right">
+            {t('platformPage.integrationsCta')}
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Band>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('platformPage.biEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('platformPage.biTitle')}
+    lead={t('platformPage.biLead')}
+  >
+    <FeatureGrid
+      bare
+      columns={3}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'bar-chart-3', title: t('platformPage.biItems.b1Title'), body: t('platformPage.biItems.b1Body') },
+        { icon: 'line-chart', title: t('platformPage.biItems.b2Title'), body: t('platformPage.biItems.b2Body') },
+        { icon: 'compass', title: t('platformPage.biItems.b3Title'), body: t('platformPage.biItems.b3Body') },
+      ]}
+    />
+  </Band>
+
+  <Band
+    id="seguridad"
+    tone="invert"
+    centered
+    data-reveal=""
+    eyebrow={t('platformPage.securityEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('platformPage.securityTitle')}
+    lead={t('platformPage.securityLead')}
+  >
+    <FeatureGrid
+      bare
+      columns={2}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'server', title: t('platformPage.securityItems.s1Title'), body: t('platformPage.securityItems.s1Body') },
+        { icon: 'shield', title: t('platformPage.securityItems.s2Title'), body: t('platformPage.securityItems.s2Body') },
+        { icon: 'key-round', title: t('platformPage.securityItems.s3Title'), body: t('platformPage.securityItems.s3Body') },
+        { icon: 'scale', title: t('platformPage.securityItems.s4Title'), body: t('platformPage.securityItems.s4Body') },
+      ]}
+    />
+  </Band>
+
+  <CtaBand
+    tone="brand"
+    eyebrow={t('platformPage.ctaEyebrow')}
+    title={t('platformPage.ctaTitle')}
+    lead={t('platformPage.ctaLead')}
+    data-reveal=""
+  >
+    <Button variant="primary" size="lg" href={contactHref} trailingIcon="arrow-right">
+      {t('platformPage.ctaButton')}
+    </Button>
+  </CtaBand>
+</PageLayout>

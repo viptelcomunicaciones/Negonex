@@ -12,7 +12,11 @@
  * Rendered by src/pages/search.astro and src/pages/[lang]/[...search].astro.
  */
 import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Band from '@/components/blocks/Band.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
 import SearchInput from '@/components/patterns/SearchInput.astro';
+import MotionInit from '@/components/patterns/MotionInit.astro';
 import { localizeRoute, useTranslations, type Locale } from '@/i18n';
 
 interface Props {
@@ -21,6 +25,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+const homeHref = localizeRoute('home', locale);
 
 const messages = JSON.stringify({
   resultOne: t('search.resultOne'),
@@ -40,17 +45,36 @@ Astro.csp?.insertScriptResource("'wasm-unsafe-eval'");
   noindex
   searchable={false}
 >
-  <section class="mx-auto max-w-3xl px-6 py-16">
-    <h1 class="font-display text-4xl font-bold tracking-tight text-foreground">{t('search.title')}</h1>
+  <MotionInit />
 
-    <form id="search-form" role="search" class="mt-8" action={localizeRoute('search', locale)} method="get" data-messages={messages}>
+  <PageHero
+    tone="secondary"
+    eyebrow={t('searchPage.eyebrow')}
+    title={t('search.title')}
+    lead={t('search.description')}
+    class="negonex-page-hero"
+  >
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[{ label: t('nav.home'), href: homeHref }, { label: t('nav.search') }]}
+    />
+    <form
+      id="search-form"
+      role="search"
+      class="mx-auto max-w-2xl text-left"
+      action={localizeRoute('search', locale)}
+      method="get"
+      data-messages={messages}
+    >
       <label for="search-query" class="sr-only">{t('search.label')}</label>
       <SearchInput id="search-query" name="q" placeholder={t('search.placeholder')} size="lg" autocomplete="off" />
     </form>
+  </PageHero>
 
-    <p id="search-status" class="mt-6 text-sm text-foreground-muted" aria-live="polite"></p>
-    <ol id="search-results" class="mt-4 space-y-4"></ol>
-  </section>
+  <Band width="narrow" pad="sm">
+    <p id="search-status" class="text-foreground-muted text-center text-sm" aria-live="polite"></p>
+    <ol id="search-results" class="mt-6 space-y-4"></ol>
+  </Band>
 </PageLayout>
 
 <script>
@@ -122,13 +146,13 @@ Astro.csp?.insertScriptResource("'wasm-unsafe-eval'");
 
       for (const result of results) {
         const li = document.createElement('li');
-        li.className = 'rounded-lg border border-border p-4 transition-colors hover:bg-background-secondary';
+        li.className = 'sandbox-bubble-enter card-interactive bg-card rounded-xl border border-border p-5';
         const a = document.createElement('a');
         a.href = result.url;
-        a.className = 'font-display text-lg font-semibold text-foreground hover:text-brand-600';
+        a.className = 'font-display text-lg font-semibold text-foreground hover:text-brand-600 dark:hover:text-brand-400';
         a.textContent = result.meta.title ?? result.url;
         const p = document.createElement('p');
-        p.className = 'mt-1 text-sm text-foreground-muted [&_mark]:bg-brand-100 [&_mark]:text-foreground dark:[&_mark]:bg-brand-900/50';
+        p.className = 'mt-1.5 text-sm text-foreground-muted leading-relaxed [&_mark]:bg-brand-100 [&_mark]:text-foreground dark:[&_mark]:bg-brand-900/50';
         // Pagefind excerpts are HTML-escaped page text with <mark> highlights.
         p.innerHTML = result.excerpt;
         li.append(a, p);

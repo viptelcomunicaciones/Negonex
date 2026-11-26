@@ -1,0 +1,163 @@
+---
+// Bundled client motion controller: strictly progressive enhancement, CSP-safe,
+// pauses off-screen infinite animations, and disables transforms under
+// prefers-reduced-motion: reduce.
+---
+
+<script>
+  const MOTION_DURATION_MS = 700;
+  const REVEAL_SELECTOR = '[data-reveal], .negonex-reveal-section';
+  const STAGGER_SELECTOR =
+    '[data-reveal-stagger], .negonex-reveal-cards, .negonex-reveal-timeline, .negonex-reveal-faq';
+
+  interface MotionWindow extends Window {
+    __negonexMotionBound?: boolean;
+    __negonexRevealObserver?: IntersectionObserver;
+    __negonexOffscreenObserver?: IntersectionObserver;
+  }
+
+  function formatNumber(value: number, decimals: number): string {
+    return decimals > 0 ? value.toFixed(decimals) : String(Math.round(value));
+  }
+
+  function animateCount(el: HTMLElement): void {
+    if (el.dataset.counted === 'true') return;
+    const rawTarget = el.dataset.countTo;
+    if (!rawTarget) return;
+
+    const target = Number(rawTarget);
+    if (!Number.isFinite(target)) return;
+
+    const prefix = el.dataset.countPrefix ?? '';
+    const suffix = el.dataset.countSuffix ?? '';
+    const decimals = Number(el.dataset.countDecimals ?? '0') || 0;
+
+    el.dataset.counted = 'true';
+    const startTime = performance.now();
+
+    function step(now: number): void {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / MOTION_DURATION_MS, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+      el.textContent = `${prefix}${formatNumber(current, decimals)}${suffix}`;
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.textContent = `${prefix}${formatNumber(target, decimals)}${suffix}`;
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+
+  function markVisible(el: HTMLElement, isReveal: boolean, isStagger: boolean): void {
+    if (isReveal) el.dataset.reveal = 'visible';
+    if (isStagger) el.dataset.revealStagger = 'visible';
+    const counters = el.querySelectorAll<HTMLElement>('[data-count-to]');
+    counters.forEach(animateCount);
+    if (el.hasAttribute('data-count-to')) {
+      animateCount(el);
+    }
+  }
+
+  function initMotion(): void {
+    const win = window as MotionWindow;
+    win.__negonexRevealObserver?.disconnect();
+    win.__negonexOffscreenObserver?.disconnect();
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const revealEls = Array.from(document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR));
+    const staggerEls = Array.from(document.querySelectorAll<HTMLElement>(STAGGER_SELECTOR));
+    const uniqueTargets = Array.from(new Set([...revealEls, ...staggerEls]));
+    const standaloneCounters = Array.from(document.querySelectorAll<HTMLElement>('[data-count-to]'));
+    const pauseTargets = Array.from(document.querySelectorAll<HTMLElement>('[data-pause-offscreen]'));
+
+    const revealSet = new Set(revealEls);
+    const staggerSet = new Set(staggerEls);
+
+    if (prefersReduced) {
+      document.documentElement.classList.remove('motion-ready');
+      uniqueTargets.forEach((el) => {
+        if (revealSet.has(el)) el.dataset.reveal = 'visible';
+        if (staggerSet.has(el)) el.dataset.revealStagger = 'visible';
+      });
+      return;
+    }
+
+    document.documentElement.classList.add('motion-ready');
+
+    if (typeof IntersectionObserver === 'undefined') {
+      uniqueTargets.forEach((el) => markVisible(el, revealSet.has(el), staggerSet.has(el)));
+      standaloneCounters.forEach(animateCount);
+      return;
+    }
+
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const target = entry.target as HTMLElement;
+          markVisible(target, revealSet.has(target), staggerSet.has(target));
+          if (target.hasAttribute('data-count-to')) {
+            animateCount(target);
+          }
+          revealObserver.unobserve(target);
+        });
+      },
+      { threshold: 0.01, rootMargin: '0px 0px -24px 0px' },
+    );
+
+    win.__negonexRevealObserver = revealObserver;
+    const viewportThreshold = window.innerHeight * 0.96;
+
+    uniqueTargets.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      // Reveal immediately if already inside OR scrolled past the viewport (e.g. hash navigation)
+      if (rect.top < viewportThreshold) {
+        markVisible(el, revealSet.has(el), staggerSet.has(el));
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+
+    standaloneCounters.forEach((el) => {
+      if (el.dataset.counted === 'true') return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top < viewportThreshold) {
+        animateCount(el);
+      } else {
+        revealObserver.observe(el);
+      }
+    });
+
+    if (pauseTargets.length > 0) {
+      const offscreenObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target as HTMLElement;
+            if (entry.isIntersecting) {
+              delete target.dataset.offscreen;
+            } else {
+              target.dataset.offscreen = 'true';
+            }
+          });
+        },
+        { threshold: 0 },
+      );
+
+      win.__negonexOffscreenObserver = offscreenObserver;
+      pauseTargets.forEach((el) => offscreenObserver.observe(el));
+    }
+  }
+
+  initMotion();
+
+  const win = window as MotionWindow;
+  if (!win.__negonexMotionBound) {
+    win.__negonexMotionBound = true;
+    document.addEventListener('astro:after-swap', initMotion);
+    document.addEventListener('astro:page-load', initMotion);
+  }
+</script>

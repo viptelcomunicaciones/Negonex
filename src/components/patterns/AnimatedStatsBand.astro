@@ -1,0 +1,77 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Band from '@/components/blocks/Band.astro';
+
+export interface AnimatedStatItem {
+  value: string;
+  label: string;
+  countTo?: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}
+
+export interface Props extends Omit<HTMLAttributes<'section'>, 'title'> {
+  stats: AnimatedStatItem[];
+  eyebrow?: string;
+  title?: string;
+  lead?: string;
+  tone?: 'default' | 'secondary' | 'invert' | 'brand';
+  width?: 'default' | 'wide' | 'narrow';
+  pad?: 'md' | 'sm' | 'none';
+  centered?: boolean;
+  id?: string;
+}
+
+const {
+  stats,
+  eyebrow,
+  title,
+  lead,
+  tone = 'secondary',
+  width = 'wide',
+  pad = 'sm',
+  centered = true,
+  id,
+  class: className,
+  ...attrs
+} = Astro.props;
+---
+
+<Band
+  id={id}
+  eyebrow={eyebrow}
+  eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+  title={title}
+  lead={lead}
+  tone={tone}
+  width={width}
+  pad={pad}
+  centered={centered}
+  class={className}
+  {...attrs}
+>
+  <dl
+    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
+    data-reveal-stagger=""
+  >
+    {
+      stats.map((stat) => (
+        <div class="bg-card border-border card-interactive negonex-stat-card flex min-w-0 flex-col items-center justify-center rounded-xl border px-5 py-6 text-center">
+          <dt
+            class="font-display text-foreground text-3xl leading-none font-bold tracking-tight whitespace-nowrap tabular-nums sm:text-4xl"
+            data-count-to={stat.countTo !== undefined ? String(stat.countTo) : undefined}
+            data-count-prefix={stat.prefix}
+            data-count-suffix={stat.suffix}
+            data-count-decimals={stat.decimals !== undefined ? String(stat.decimals) : undefined}
+          >
+            {stat.value}
+          </dt>
+          <dd class="text-foreground-muted mt-3 max-w-[24ch] text-sm leading-relaxed">
+            {stat.label}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</Band>

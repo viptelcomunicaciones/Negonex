@@ -1,0 +1,101 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Band from '@/components/blocks/Band.astro';
+import FeatureGrid from '@/components/blocks/FeatureGrid.astro';
+import ContactSection from '@/components/blocks/ContactSection.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import MotionInit from '@/components/patterns/MotionInit.astro';
+import { localizeRoute, useTranslations, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const homeHref = localizeRoute('home', locale);
+---
+
+<PageLayout title={t('contactPage.title')} description={t('contactPage.description')}>
+  <MotionInit />
+  <PageHero
+    tone="secondary"
+    eyebrow={t('contactPage.heroEyebrow')}
+    title={t('contactPage.heroTitle')}
+    lead={t('contactPage.heroLead')}
+    class="negonex-page-hero"
+  >
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[{ label: t('nav.home'), href: homeHref }, { label: t('nav.contact') }]}
+    />
+  </PageHero>
+
+  <Band
+    centered
+    data-reveal=""
+    eyebrow={t('contactPage.pathsEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('contactPage.pathsTitle')}
+    lead={t('contactPage.pathsLead')}
+  >
+    <FeatureGrid
+      bare
+      columns={2}
+      variant="card"
+      class="negonex-reveal-cards negonex-interactive-cards"
+      items={[
+        { icon: 'rocket', title: t('contactPage.path1Title'), body: t('contactPage.path1Body') },
+        { icon: 'building-2', title: t('contactPage.path2Title'), body: t('contactPage.path2Body') },
+      ]}
+    />
+  </Band>
+
+  <ContactSection
+    tone="secondary"
+    eyebrow={t('contactPage.sectionEyebrow')}
+    title={t('contactPage.sectionTitle')}
+    lead={t('contactPage.sectionLead')}
+    class="negonex-reveal-section"
+    details={[
+      {
+        icon: 'map-pin',
+        label: t('contactPage.detailLocationLabel'),
+        value: t('contactPage.detailLocationValue'),
+      },
+      {
+        icon: 'mail',
+        label: t('contactPage.detailEmailLabel'),
+        value: t('contactPage.detailEmailValue'),
+      },
+      {
+        icon: 'phone',
+        label: t('contactPage.detailPhoneLabel'),
+        value: t('contactPage.detailPhoneValue'),
+      },
+    ]}
+    form={{
+      submitLabel: t('contactPage.form.submit'),
+      successMessage: t('contactPage.form.success'),
+      placeholders: {
+        name: t('contactPage.form.namePlaceholder'),
+        email: t('contactPage.form.emailPlaceholder'),
+        subject: t('contactPage.form.subjectPlaceholder'),
+        message: t('contactPage.form.messagePlaceholder'),
+      },
+    }}
+  >
+    <div class="bg-card border-border card-interactive rounded-xl border p-5">
+      <div class="flex items-center gap-2.5">
+        <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-8 shrink-0 place-items-center rounded-lg">
+          <Icon name="shield-check" size="sm" />
+        </span>
+        <h3 class="font-display text-foreground text-sm font-bold">{t('contactPage.guaranteesCardTitle')}</h3>
+      </div>
+      <p class="text-foreground-muted mt-2.5 text-sm leading-relaxed">{t('contactPage.guaranteesCardBody')}</p>
+    </div>
+  </ContactSection>
+</PageLayout>

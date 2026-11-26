@@ -1,9 +1,693 @@
 /* =============================================================================
-   Active theme
+   Active theme — NegoNEX AI (IIT S.A.S.)
    =============================================================================
-   Change this import to switch themes. Upgrades never overwrite this file.
-   To use the midnight theme:
-     @import './themes/midnight.css';
+   Corporate Deep Navy + Emerald Green (Figure 1 visual identity) built on
+   Velocity's OKLCH semantic token contract. Light-first with high-contrast dark
+   navy mode and themed browser surfaces.
    ============================================================================= */
 
 @import './themes/default.css';
+
+/* Register Velocity status tokens in Tailwind v4 @theme so semantic utilities
+   (bg-error-light, text-error-foreground, bg-info-light, etc.) compile cleanly
+   in both light and dark modes without modifying Velocity-owned global.css. */
+@theme {
+  --color-success-light: var(--success-light);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning-light: var(--warning-light);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-error-light: var(--error-light);
+  --color-error-foreground: var(--error-foreground);
+  --color-info-light: var(--info-light);
+  --color-info-foreground: var(--info-foreground);
+}
+
+:root {
+  /* -------------------------------------------------------------------------
+     Brand Scale — Emerald Green (hue 162)
+     Calibrated for >= 4.5:1 WCAG AA contrast on light surfaces and brand fills.
+     ------------------------------------------------------------------------- */
+  --brand-hue: 162;
+  --brand-50: oklch(97% 0.02 162);
+  --brand-100: oklch(93% 0.045 162);
+  --brand-200: oklch(86% 0.085 162);
+  --brand-300: oklch(75% 0.13 162);
+  --brand-400: oklch(62% 0.16 162);
+  --brand-500: oklch(48% 0.14 162);
+  --brand-600: oklch(42% 0.13 162);
+  --brand-700: oklch(36% 0.115 162);
+  --brand-800: oklch(29% 0.095 162);
+  --brand-900: oklch(22% 0.07 162);
+
+  --brand-fill: var(--brand-600);
+  --brand-fill-hover: var(--brand-700);
+  --brand-ink: oklch(99% 0 0);
+  --logo-accent: oklch(58% 0.16 162);
+
+  /* -------------------------------------------------------------------------
+     Corporate Deep Navy Surfaces & Ink — Light Mode
+     ------------------------------------------------------------------------- */
+  --background: oklch(99.2% 0.003 245);
+  --background-secondary: oklch(97.2% 0.007 245);
+  --background-tertiary: oklch(94.6% 0.011 245);
+  --background-elevated: oklch(100% 0 0);
+
+  --foreground: oklch(20% 0.042 248);
+  --foreground-secondary: oklch(31% 0.032 248);
+  --foreground-muted: oklch(44% 0.022 248);
+  --foreground-subtle: oklch(52% 0.016 248);
+
+  --border: oklch(89.5% 0.012 245);
+  --border-strong: oklch(81% 0.018 245);
+  --border-subtle: oklch(94% 0.008 245);
+
+  --primary: oklch(23% 0.055 248);
+  --primary-hover: oklch(29% 0.06 248);
+  --primary-foreground: oklch(99% 0 0);
+
+  --secondary: oklch(95% 0.009 245);
+  --secondary-hover: oklch(91% 0.014 245);
+  --secondary-foreground: oklch(20% 0.042 248);
+
+  --accent: var(--brand-500);
+  --accent-hover: var(--brand-600);
+  --accent-light: var(--brand-100);
+
+  --muted: oklch(94.6% 0.011 245);
+  --muted-foreground: oklch(45% 0.02 248);
+
+  --card: oklch(100% 0 0);
+  --card-border: oklch(89.5% 0.012 245);
+
+  --input-bg: oklch(100% 0 0);
+  --input-border: oklch(80% 0.018 245);
+  --input-focus: var(--brand-600);
+  --ring: var(--brand-600);
+
+  --gradient-start: oklch(97.2% 0.007 245);
+  --gradient-end: oklch(99.2% 0.003 245);
+
+  /* Inverted corporate Deep Navy band */
+  --surface-invert: oklch(18.5% 0.052 248);
+  --surface-invert-secondary: oklch(23.5% 0.05 248);
+  --surface-invert-tertiary: oklch(29.5% 0.045 248);
+  --on-invert: oklch(97% 0.005 245);
+  --on-invert-secondary: oklch(86% 0.012 245);
+  --on-invert-muted: oklch(75% 0.014 245);
+  --border-invert: oklch(30% 0.04 248);
+  --border-invert-strong: oklch(40% 0.038 248);
+
+  /* Typography & rhythm */
+  --theme-heading-weight: 700;
+  --theme-heading-tracking: -0.025em;
+  --theme-body-leading: 1.65;
+
+  /* Shadows — restrained, offset + soft blur */
+  --theme-shadow-sm: 0 1px 2px oklch(18% 0.04 248 / 0.05);
+  --theme-shadow-md: 0 6px 16px oklch(18% 0.04 248 / 0.06), 0 1px 2px oklch(18% 0.04 248 / 0.04);
+  --theme-shadow-lg: 0 12px 28px oklch(18% 0.04 248 / 0.08), 0 2px 6px oklch(18% 0.04 248 / 0.04);
+  --theme-shadow-xl: 0 24px 48px oklch(18% 0.04 248 / 0.12), 0 4px 12px oklch(18% 0.04 248 / 0.05);
+
+  /* Radii — disciplined B2B geometry */
+  --theme-radius-sm: 0.375rem;
+  --theme-radius-md: 0.5rem;
+  --theme-radius-lg: 0.75rem;
+  --theme-radius-xl: 1rem;
+  --theme-radius-full: 9999px;
+
+  /* Motion tokens — Emil Kowalski strong ease-out & restrained durations */
+  --motion-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --motion-duration-press: 140ms;
+  --motion-duration-ui: 200ms;
+  --motion-duration-reveal: 460ms;
+}
+
+/* -------------------------------------------------------------------------
+   Dark Mode — Deep Navy Ground + Luminous Emerald Accents
+   ------------------------------------------------------------------------- */
+.dark {
+  --brand-400: oklch(76% 0.15 162);
+  --brand-500: oklch(69% 0.155 162);
+  --brand-600: oklch(44% 0.13 162);
+
+  --brand-fill: oklch(69% 0.155 162);
+  --brand-fill-hover: oklch(75% 0.15 162);
+  --brand-ink: oklch(14% 0.038 248);
+  --logo-accent: oklch(70% 0.16 162);
+
+  --background: oklch(13.5% 0.034 248);
+  --background-secondary: oklch(17.5% 0.038 248);
+  --background-tertiary: oklch(22% 0.04 248);
+  --background-elevated: oklch(18.5% 0.038 248);
+
+  --foreground: oklch(95.5% 0.007 245);
+  --foreground-secondary: oklch(82% 0.014 245);
+  --foreground-muted: oklch(70% 0.014 245);
+  --foreground-subtle: oklch(62% 0.012 245);
+
+  --border: oklch(26% 0.035 248);
+  --border-strong: oklch(34% 0.035 248);
+  --border-subtle: oklch(20% 0.032 248);
+
+  --primary: oklch(95.5% 0.007 245);
+  --primary-hover: oklch(88% 0.012 245);
+  --primary-foreground: oklch(14% 0.038 248);
+
+  --secondary: oklch(22% 0.038 248);
+  --secondary-hover: oklch(27% 0.04 248);
+  --secondary-foreground: oklch(93% 0.008 245);
+
+  --accent: var(--brand-500);
+  --accent-hover: var(--brand-400);
+  --accent-light: oklch(23% 0.065 162);
+
+  --muted: oklch(22% 0.038 248);
+  --muted-foreground: oklch(70% 0.014 245);
+
+  --card: oklch(17.5% 0.038 248);
+  --card-border: oklch(27% 0.035 248);
+
+  --input-bg: oklch(16% 0.035 248);
+  --input-border: oklch(32% 0.035 248);
+  --input-focus: var(--brand-500);
+  --ring: var(--brand-500);
+
+  --gradient-start: oklch(13.5% 0.034 248);
+  --gradient-end: oklch(17.5% 0.038 248);
+
+  --surface-invert: oklch(17.5% 0.038 248);
+  --surface-invert-secondary: oklch(22% 0.04 248);
+  --surface-invert-tertiary: oklch(27% 0.04 248);
+  --on-invert: oklch(95.5% 0.007 245);
+  --on-invert-secondary: oklch(82% 0.014 245);
+  --on-invert-muted: oklch(70% 0.014 245);
+  --border-invert: oklch(28% 0.035 248);
+  --border-invert-strong: oklch(36% 0.035 248);
+
+  --theme-shadow-sm: 0 1px 3px oklch(8% 0.03 248 / 0.35);
+  --theme-shadow-md: 0 6px 16px oklch(8% 0.03 248 / 0.4), 0 1px 2px oklch(8% 0.03 248 / 0.2);
+  --theme-shadow-lg: 0 12px 28px oklch(8% 0.03 248 / 0.45), 0 2px 6px oklch(8% 0.03 248 / 0.25);
+  --theme-shadow-xl: 0 24px 48px oklch(8% 0.03 248 / 0.55), 0 4px 12px oklch(8% 0.03 248 / 0.3);
+}
+
+/* -------------------------------------------------------------------------
+   Themed Browser Surfaces & Typographic Polish
+   ------------------------------------------------------------------------- */
+html {
+  caret-color: var(--accent);
+}
+
+::selection {
+  background-color: var(--brand-200);
+  color: var(--foreground);
+}
+
+.dark ::selection {
+  background-color: oklch(34% 0.1 162);
+  color: var(--foreground);
+}
+
+a {
+  text-underline-offset: 0.2em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+main p {
+  text-wrap: pretty;
+}
+
+/* -------------------------------------------------------------------------
+   Centered Inner PageHero & Section Eyebrow Hierarchy
+   ------------------------------------------------------------------------- */
+.negonex-page-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.negonex-page-hero > div {
+  text-align: center;
+}
+
+.negonex-page-hero nav[aria-label] ol {
+  justify-content: center;
+}
+
+.negonex-page-hero h1,
+.negonex-page-hero p {
+  margin-inline: auto;
+}
+
+.negonex-page-hero h1 {
+  font-size: clamp(2.125rem, 3.6vw, 3.25rem);
+  line-height: 1.08;
+}
+
+.negonex-page-hero p.uppercase {
+  color: var(--brand-600);
+}
+
+.dark .negonex-page-hero p.uppercase {
+  color: var(--brand-400);
+}
+
+/* Emerald section eyebrow accent on standard bands (high contrast in both modes) */
+.negonex-eyebrow,
+section:not(.invert-section):not(.brand-section) p.uppercase.tracking-\[0\.12em\] {
+  color: var(--brand-600);
+  letter-spacing: 0.12em;
+}
+
+.dark .negonex-eyebrow,
+.dark section:not(.invert-section):not(.brand-section) p.uppercase.tracking-\[0\.12em\] {
+  color: var(--brand-400);
+}
+
+.invert-section .negonex-eyebrow,
+.invert-section p.uppercase.tracking-\[0\.12em\] {
+  color: var(--brand-300);
+}
+
+.brand-section .negonex-eyebrow,
+.brand-section p.uppercase.tracking-\[0\.12em\] {
+  color: var(--brand-ink);
+  opacity: 0.9;
+}
+
+/* -------------------------------------------------------------------------
+   Architectural Motion System (CSP-safe, transforms/opacity only)
+   ------------------------------------------------------------------------- */
+@keyframes negonex-hero-rise {
+  from {
+    opacity: 0.01;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.negonex-page-hero > div > div > *,
+.negonex-hero > div > div:first-child > *,
+main > header > div > * {
+  animation: negonex-hero-rise 380ms var(--motion-ease-out) backwards;
+}
+
+.negonex-page-hero > div > div > *:nth-child(1),
+.negonex-hero > div > div:first-child > *:nth-child(1),
+main > header > div > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.negonex-page-hero > div > div > *:nth-child(2),
+.negonex-hero > div > div:first-child > *:nth-child(2),
+main > header > div > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+
+.negonex-page-hero > div > div > *:nth-child(3),
+.negonex-hero > div > div:first-child > *:nth-child(3),
+main > header > div > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+
+.negonex-page-hero > div > div > *:nth-child(4),
+.negonex-hero > div > div:first-child > *:nth-child(4),
+main > header > div > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+
+.negonex-page-hero > div > div > *:nth-child(5),
+.negonex-hero > div > div:first-child > *:nth-child(5),
+main > header > div > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+
+.negonex-hero aside {
+  animation: negonex-hero-rise 440ms var(--motion-ease-out) 120ms backwards;
+}
+
+/* Keep Home hero CTA buttons single-line and wrap cleanly as whole buttons */
+.negonex-hero > div > div:first-child > div:last-child {
+  flex-wrap: wrap;
+}
+
+.negonex-hero > div > div:first-child > div:last-child a {
+  white-space: nowrap;
+}
+
+/* Valid HTML5 emerald top accent bar for KPI cards inside <dl> */
+.negonex-stat-card::before {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 0.25rem;
+  margin-bottom: 0.75rem;
+  border-radius: 9999px;
+  background-color: color-mix(in oklch, var(--brand-500) 80%, transparent);
+}
+
+/* Align plan prices horizontally on 3-column Pricing grids by stacking title & badge cleanly */
+@media (min-width: 1024px) {
+  .negonex-pricing-3col > div > ul > li > div > div:first-child {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+/* Fix dark-mode WCAG AA contrast on Velocity ArticleHero author avatar circle */
+.dark main > header .bg-brand-500.text-white {
+  background-color: var(--brand-600);
+}
+
+@keyframes pipeline-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  20%,
+  35% {
+    opacity: 1;
+    transform: scale(1.18);
+  }
+}
+
+.negonex-hero .pipeline-step .pipeline-dot {
+  animation: pipeline-pulse 3.4s var(--motion-ease-out) infinite;
+}
+
+.negonex-hero[data-offscreen='true'] .pipeline-step .pipeline-dot {
+  animation-play-state: paused;
+}
+
+.negonex-hero .pipeline-step:nth-child(1) .pipeline-dot {
+  animation-delay: 0s;
+}
+
+.negonex-hero .pipeline-step:nth-child(2) .pipeline-dot {
+  animation-delay: 0.85s;
+}
+
+.negonex-hero .pipeline-step:nth-child(3) .pipeline-dot {
+  animation-delay: 1.7s;
+}
+
+.negonex-hero .pipeline-step:nth-child(4) .pipeline-dot {
+  animation-delay: 2.55s;
+}
+
+.negonex-hero .pipeline-step {
+  transition: background-color var(--motion-duration-ui) ease;
+  border-radius: var(--theme-radius-md);
+  padding-inline: 0.5rem;
+  margin-inline: -0.5rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .negonex-hero .pipeline-step:hover {
+    background-color: color-mix(in oklch, var(--brand-500) 6%, transparent);
+  }
+}
+
+@keyframes negonex-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes negonex-reveal-stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pre-reveal hidden states (zero-specificity :where so interactive states always win) */
+:where(html.motion-ready)
+  :where(
+    [data-reveal]:not([data-reveal='visible']),
+    .negonex-reveal-section:not([data-reveal='visible'])
+  ) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger]:not([data-reveal-stagger='visible']) > *,
+    ul.negonex-reveal-cards:not([data-reveal-stagger='visible']) > li,
+    section.negonex-reveal-cards:not([data-reveal-stagger='visible']) > div > ul > li,
+    ol.negonex-reveal-timeline:not([data-reveal-stagger='visible']) > li,
+    .negonex-reveal-faq:not([data-reveal-stagger='visible']) > details
+  ) {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* One-shot reveal animations with fill-mode: backwards so resting transform returns to `none`
+   and hover transforms/transitions on cards are never shadowed or delayed. */
+:where(html.motion-ready)
+  :where([data-reveal='visible'], .negonex-reveal-section[data-reveal='visible']) {
+  animation: negonex-reveal-in var(--motion-duration-reveal) var(--motion-ease-out) backwards;
+}
+
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'] > *,
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'] > li,
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul > li,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'] > li,
+    .negonex-reveal-faq[data-reveal-stagger='visible'] > details
+  ) {
+  animation: negonex-reveal-stagger-in 420ms var(--motion-ease-out) backwards;
+}
+
+/* 50ms stagger scale (within Emil Kowalski 30-80ms window, capped at 400ms) */
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(1) {
+  animation-delay: 0ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(4) {
+  animation-delay: 150ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(5) {
+  animation-delay: 200ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(6) {
+  animation-delay: 250ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(7) {
+  animation-delay: 300ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(8) {
+  animation-delay: 350ms;
+}
+:where(html.motion-ready)
+  :where(
+    [data-reveal-stagger='visible'],
+    ul.negonex-reveal-cards[data-reveal-stagger='visible'],
+    section.negonex-reveal-cards[data-reveal-stagger='visible'] > div > ul,
+    ol.negonex-reveal-timeline[data-reveal-stagger='visible'],
+    .negonex-reveal-faq[data-reveal-stagger='visible']
+  ) > *:nth-child(n + 9) {
+  animation-delay: 400ms;
+}
+
+/* Unified interactive card hover (strictly pointer-fine gated, named properties only) */
+.card-interactive,
+ul.negonex-interactive-cards > li > *,
+section.negonex-interactive-cards > div > ul > li > *,
+main > div > section article {
+  transition:
+    transform var(--motion-duration-ui) var(--motion-ease-out),
+    border-color var(--motion-duration-ui) var(--motion-ease-out),
+    box-shadow var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card-interactive:hover,
+  ul.negonex-interactive-cards > li > *:hover,
+  section.negonex-interactive-cards > div > ul > li > *:hover,
+  main > div > section article:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in oklch, var(--accent) 45%, var(--border));
+    box-shadow: var(--theme-shadow-md);
+  }
+
+  .invert-section .card-interactive:hover,
+  .invert-section ul.negonex-interactive-cards > li > *:hover {
+    border-color: color-mix(in oklch, var(--brand-400) 55%, var(--border-invert));
+  }
+}
+
+/* Tactile press feedback on interactive buttons & CTA links */
+main button:not(:disabled),
+main a[class*='inline-flex'],
+.negonex-header a[class*='inline-flex'] {
+  transition-property: transform, background-color, border-color, color, opacity, box-shadow;
+  transition-duration: var(--motion-duration-press);
+  transition-timing-function: var(--motion-ease-out);
+}
+
+main button:not(:disabled):active,
+main a[class*='inline-flex']:active,
+.negonex-header a[class*='inline-flex']:active {
+  transform: scale(0.98);
+}
+
+/* Process Steps accent polish */
+.negonex-steps > li {
+  transition: border-color var(--motion-duration-ui) var(--motion-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .negonex-steps > li:hover {
+    border-color: var(--accent);
+  }
+}
+
+/* Sandbox & panel micro-transitions (never scale(0); backwards fill keeps hover free) */
+@keyframes sandbox-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sandbox-bubble-enter {
+  animation: sandbox-bubble-in 240ms var(--motion-ease-out) backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .negonex-page-hero > div > div > *,
+  .negonex-hero > div > div:first-child > *,
+  .negonex-hero aside,
+  .negonex-hero .pipeline-step .pipeline-dot,
+  main > header > div > *,
+  .sandbox-bubble-enter,
+  :where(html.motion-ready) :where([data-reveal], .negonex-reveal-section),
+  :where(html.motion-ready)
+    :where(
+      [data-reveal-stagger] > *,
+      ul.negonex-reveal-cards > li,
+      section.negonex-reveal-cards > div > ul > li,
+      ol.negonex-reveal-timeline > li,
+      .negonex-reveal-faq > details
+    ) {
+    opacity: 1;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+
+  .card-interactive,
+  ul.negonex-interactive-cards > li > *,
+  section.negonex-interactive-cards > div > ul > li > *,
+  main > div > section article,
+  main button:not(:disabled),
+  main a[class*='inline-flex'],
+  .negonex-header a[class*='inline-flex'] {
+    transition: none;
+  }
+
+  main button:not(:disabled):active,
+  main a[class*='inline-flex']:active,
+  .negonex-header a[class*='inline-flex']:active {
+    transform: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card-interactive:hover,
+    ul.negonex-interactive-cards > li > *:hover,
+    section.negonex-interactive-cards > div > ul > li > *:hover,
+    main > div > section article:hover {
+      transform: none;
+    }
+  }
+}

@@ -1,23 +1,11 @@
 /**
- * Navigation & route configuration
- *
- * - `routes`: every static page and its URL slug, per locale. Used to build
- *   localized links, hreflang alternates and the [lang] pages.
- * - `navItems`: what appears in the header and footer nav, in order.
- * - `headerConfig` / `footerConfig`: header CTA and actions, footer extra links.
- *
- * Labels may be translation keys ('nav.blog') or plain text ('Pricing').
- * Astro still routes from the filesystem. This file only controls links and menus.
- * `npm create velocity-astro --pages` adds entries here for you.
+ * Navigation & route configuration — NegoNEX AI (IIT S.A.S.)
  */
 
 export interface RouteDefinition {
-  /** URL path for the default locale, without slashes ('' = home). */
+  /** URL path for the default locale (es), without slashes ('' = home). */
   path: string;
-  /**
-   * Translated slugs for other locales, e.g. { es: 'sobre-nosotros' }. Falls back to `path`.
-   * Not available for `blog`, whose pages live in a fixed folder.
-   */
+  /** Translated slugs for non-default locales (en). */
   slugs?: Partial<Record<string, string>>;
   /** Set false for pages that only exist in the default locale. */
   localized?: boolean;
@@ -25,8 +13,12 @@ export interface RouteDefinition {
 
 export const routes = {
   home: { path: '' },
+  platform: { path: 'plataforma', slugs: { en: 'platform' } },
+  pricing: { path: 'precios', slugs: { en: 'pricing' } },
+  about: { path: 'nosotros', slugs: { en: 'about' } },
   blog: { path: 'blog' },
-  search: { path: 'search', slugs: { es: 'buscar', fr: 'recherche' } },
+  contact: { path: 'contacto', slugs: { en: 'contact' } },
+  search: { path: 'search' },
 } satisfies Record<string, RouteDefinition>;
 
 export type RouteId = keyof typeof routes;
@@ -43,14 +35,16 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: 'nav.blog', route: 'blog', order: 1 },
-  { label: 'nav.search', route: 'search', order: 2 },
+  { label: 'nav.platform', route: 'platform', order: 1 },
+  { label: 'nav.pricing', route: 'pricing', order: 2 },
+  { label: 'nav.about', route: 'about', order: 3 },
+  { label: 'nav.guides', route: 'blog', order: 4 },
+  { label: 'nav.contact', route: 'contact', order: 5 },
 ];
 
 export interface HeaderAction {
   icon: string;
   href: string;
-  /** Translation key or plain text (used as the accessible name) */
   label: string;
   iconOnly?: boolean;
   target?: string;
@@ -60,19 +54,18 @@ export interface HeaderAction {
 export const headerConfig: {
   cta?: { label: string; href: string };
   actions: HeaderAction[];
-  /** Extra items shown before the nav, e.g. landing-page anchors */
   extraNav: NavItem[];
+  breakpoint?: 'md' | 'lg' | 'xl';
 } = {
+  cta: { label: 'nav.demoCta', href: '/contacto' },
   actions: [],
   extraNav: [],
+  breakpoint: 'lg',
 };
 
 /** Defaults for <Footer />. */
 export const footerConfig: { extraLinks: NavItem[] } = {
-  extraLinks: [
-    // A small credit for the starter. Remove it whenever you like.
-    { label: 'footer.builtWith', href: 'https://deployvelocity.com', external: true, order: 100 },
-  ],
+  extraLinks: [],
 };
 
 /** Navigation items sorted by order. */

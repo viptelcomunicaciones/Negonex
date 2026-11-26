@@ -3,13 +3,10 @@
  * switcher, hreflang, the sitemap and Astro's `i18n` config.
  *
  * Plain JS (not TS) so astro.config.mjs can import it too.
- *
- * To add languages, list them here and add a site-copy file per locale in
- * src/i18n/translations/ (UI strings for en, es and fr ship in src/i18n/ui.ts).
  */
 
-/** @type {'en'} */
-export const defaultLocale = 'en';
+/** @type {'es'} */
+export const defaultLocale = 'es';
 
-/** @type {readonly ['en', 'es', 'fr']} */
-export const locales = /** @type {const} */ (['en', 'es', 'fr']);
+/** @type {readonly ['es', 'en']} */
+export const locales = /** @type {const} */ (['es', 'en']);

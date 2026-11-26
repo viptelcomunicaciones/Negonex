@@ -1,0 +1,126 @@
+---
+/**
+ * Semantic, accessible representation of Michael Porter's Value Chain
+ * adapted to IIT S.A.S. (NegoNEX AI) — SaaS B2B architecture.
+ */
+import Band from '@/components/blocks/Band.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+
+export interface ActivityItem {
+  title: string;
+  body: string;
+  icon: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead: string;
+  supportHeading: string;
+  primaryHeading: string;
+  marginHeading: string;
+  supportActivities: ActivityItem[];
+  primaryActivities: ActivityItem[];
+  marginMetrics: string[];
+  tone?: 'default' | 'secondary' | 'invert' | 'brand';
+}
+
+const {
+  eyebrow,
+  title,
+  lead,
+  supportHeading,
+  primaryHeading,
+  marginHeading,
+  supportActivities,
+  primaryActivities,
+  marginMetrics,
+  tone = 'secondary',
+} = Astro.props;
+---
+
+<Band
+  id="cadena-de-valor"
+  {eyebrow}
+  eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+  {title}
+  {lead}
+  {tone}
+  width="wide"
+  centered
+  data-reveal=""
+>
+  <div class="space-y-8">
+    {/* Support Activities */}
+    <div class="space-y-4">
+      <div class="flex items-center justify-center gap-2 sm:justify-start">
+        <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-8 place-items-center rounded-lg">
+          <Icon name="layers" size="sm" />
+        </span>
+        <h3 class="font-display text-foreground text-base font-bold tracking-tight uppercase">
+          {supportHeading}
+        </h3>
+      </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="">
+        {
+          supportActivities.map((item) => (
+            <div class="bg-card border-border card-interactive flex flex-col rounded-xl border p-5">
+              <div class="flex items-center gap-2.5">
+                <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-8 shrink-0 place-items-center rounded-lg">
+                  <Icon name={item.icon} size="sm" />
+                </span>
+                <h4 class="font-display text-foreground text-sm font-semibold leading-snug">{item.title}</h4>
+              </div>
+              <p class="text-foreground-muted mt-3 text-sm leading-relaxed">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    {/* Primary Activities (full width so all 5 steps breathe cleanly) */}
+    <div class="space-y-4">
+      <div class="flex items-center justify-center gap-2 sm:justify-start">
+        <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-8 place-items-center rounded-lg">
+          <Icon name="workflow" size="sm" />
+        </span>
+        <h3 class="font-display text-foreground text-base font-bold tracking-tight uppercase">
+          {primaryHeading}
+        </h3>
+      </div>
+      <ol class="flex flex-wrap justify-center gap-4" data-reveal-stagger="">
+        {
+          primaryActivities.map((item) => (
+            <li class="bg-card border-border card-interactive flex w-full flex-col rounded-xl border p-5 sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)] xl:w-[calc((100%-4rem)/5)]">
+              <div class="flex items-center gap-2.5">
+                <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-8 shrink-0 place-items-center rounded-lg">
+                  <Icon name={item.icon} size="sm" />
+                </span>
+                <h4 class="font-display text-foreground text-sm font-semibold leading-snug">{item.title}</h4>
+              </div>
+              <p class="text-foreground-muted mt-3 text-sm leading-relaxed">{item.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    {/* Margin & Target KPIs executive bar */}
+    <div class="invert-section bg-background border-border-invert rounded-xl border p-6 sm:p-8" data-reveal="">
+      <div class="flex items-center justify-center gap-2 sm:justify-start">
+        <Icon name="trending-up" size="sm" class="text-brand-300 shrink-0" />
+        <h3 class="font-display text-on-invert text-base font-bold tracking-tight uppercase">{marginHeading}</h3>
+      </div>
+      <ul class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4" data-reveal-stagger="">
+        {
+          marginMetrics.map((metric) => (
+            <li class="border-border-invert flex items-start gap-2.5 rounded-lg border px-4 py-3 text-sm">
+              <Icon name="check" size="sm" class="text-brand-300 mt-0.5 shrink-0" />
+              <span class="text-on-invert-secondary font-medium leading-snug">{metric}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Band>

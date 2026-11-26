@@ -1,15 +1,52 @@
 ---
 /**
- * Your site's footer. Every layout renders this file, so a change here reaches
- * every page, and upgrades never overwrite it.
- *
- * Layouts pass their own defaults through Astro.props. Anything you set after the
- * spread wins on every page.
+ * Site footer for NegoNEX AI (IIT S.A.S.).
+ * Rendered by every layout; upgrades never overwrite this file.
  */
 import type { ComponentProps } from 'astro/types';
 import Footer from '@/components/layout/Footer.astro';
+import { getLocale, localizeRoute, useTranslations } from '@/i18n';
 
 type Props = ComponentProps<typeof Footer>;
+
+const locale = getLocale(Astro);
+const t = useTranslations(locale);
+
+const linkGroups = [
+  {
+    title: t('footerGroups.product'),
+    links: [
+      { label: t('nav.platform'), href: localizeRoute('platform', locale) },
+      { label: t('nav.pricing'), href: localizeRoute('pricing', locale) },
+      { label: t('footerGroups.sandboxLink'), href: `${localizeRoute('home', locale)}#sandbox` },
+    ],
+  },
+  {
+    title: t('footerGroups.company'),
+    links: [
+      { label: t('nav.about'), href: localizeRoute('about', locale) },
+      { label: t('nav.guides'), href: localizeRoute('blog', locale) },
+      { label: t('nav.contact'), href: localizeRoute('contact', locale) },
+      { label: t('nav.search'), href: localizeRoute('search', locale) },
+    ],
+  },
+  {
+    title: t('footerGroups.compliance'),
+    links: [
+      { label: t('footerGroups.securityLink'), href: `${localizeRoute('platform', locale)}#seguridad` },
+      { label: t('footerGroups.guaranteesLink'), href: `${localizeRoute('pricing', locale)}#garantias` },
+    ],
+  },
+];
 ---
 
-<Footer {...Astro.props} layout="simple" />
+<Footer
+  {...Astro.props}
+  layout="columns"
+  columns={4}
+  background="secondary"
+  tagline={t('site.footerTagline')}
+  linkGroups={linkGroups}
+  copyright={t('site.copyright')}
+  showSocial={false}
+/>

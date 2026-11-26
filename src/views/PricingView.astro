@@ -1,0 +1,334 @@
+---
+import PageLayout from '@/layouts/PageLayout.astro';
+import PageHero from '@/components/blocks/PageHero.astro';
+import Pricing from '@/components/blocks/Pricing.astro';
+import Band from '@/components/blocks/Band.astro';
+import Faq from '@/components/blocks/Faq.astro';
+import CtaBand from '@/components/blocks/CtaBand.astro';
+import Breadcrumbs from '@/components/seo/Breadcrumbs.astro';
+import Table from '@/components/ui/data-display/Table/Table.astro';
+import Button from '@/components/ui/form/Button/Button.astro';
+import Icon from '@/components/ui/primitives/Icon/Icon.astro';
+import JsonLd from '@/components/seo/JsonLd.astro';
+import PricingEstimator from '@/components/patterns/PricingEstimator';
+import MotionInit from '@/components/patterns/MotionInit.astro';
+import { createProductSchema } from '@/lib/schema';
+import { localizeRoute, useTranslations, type Locale } from '@/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const homeHref = localizeRoute('home', locale);
+const contactHref = localizeRoute('contact', locale);
+const pricingHref = localizeRoute('pricing', locale);
+
+const estimatorLabels = {
+  eyebrow: t('pricingPage.estimator.eyebrow'),
+  heading: t('pricingPage.estimator.heading'),
+  subheading: t('pricingPage.estimator.subheading'),
+  planLabel: t('pricingPage.estimator.planLabel'),
+  starterTitle: t('pricingPage.estimator.starterTitle'),
+  starterMeta: t('pricingPage.estimator.starterMeta'),
+  enterpriseTitle: t('pricingPage.estimator.enterpriseTitle'),
+  enterpriseMeta: t('pricingPage.estimator.enterpriseMeta'),
+  commitmentLabel: t('pricingPage.estimator.commitmentLabel'),
+  starterMonthlyLabel: t('pricingPage.estimator.starterMonthlyLabel'),
+  starterAnnualLabel: t('pricingPage.estimator.starterAnnualLabel'),
+  enterprise12Label: t('pricingPage.estimator.enterprise12Label'),
+  enterprise24Label: t('pricingPage.estimator.enterprise24Label'),
+  conversationsLabel: t('pricingPage.estimator.conversationsLabel'),
+  conversationsIncluded: t('pricingPage.estimator.conversationsIncluded'),
+  extraPacksLabel: t('pricingPage.estimator.extraPacksLabel'),
+  extraPacksHint: t('pricingPage.estimator.extraPacksHint'),
+  decreaseExtraPacksLabel: t('pricingPage.estimator.decreaseExtraPacksLabel'),
+  increaseExtraPacksLabel: t('pricingPage.estimator.increaseExtraPacksLabel'),
+  intelligenceLabel: t('pricingPage.estimator.intelligenceLabel'),
+  intelligenceHint: t('pricingPage.estimator.intelligenceHint'),
+  intelligenceFreePromo: t('pricingPage.estimator.intelligenceFreePromo'),
+  consultingLabel: t('pricingPage.estimator.consultingLabel'),
+  consultingHint: t('pricingPage.estimator.consultingHint'),
+  decreaseConsultingLabel: t('pricingPage.estimator.decreaseConsultingLabel'),
+  increaseConsultingLabel: t('pricingPage.estimator.increaseConsultingLabel'),
+  summaryTitle: t('pricingPage.estimator.summaryTitle'),
+  setupRow: t('pricingPage.estimator.setupRow'),
+  baseMonthlyRow: t('pricingPage.estimator.baseMonthlyRow'),
+  extraPacksRow: t('pricingPage.estimator.extraPacksRow'),
+  intelligenceRow: t('pricingPage.estimator.intelligenceRow'),
+  consultingRow: t('pricingPage.estimator.consultingRow'),
+  overageRow: t('pricingPage.estimator.overageRow'),
+  overageBlocksDetail: t('pricingPage.estimator.overageBlocksDetail'),
+  totalMonthlyRow: t('pricingPage.estimator.totalMonthlyRow'),
+  annualRenewalNote: t('pricingPage.estimator.annualRenewalNote'),
+  upgradeBannerTitle: t('pricingPage.estimator.upgradeBannerTitle'),
+  upgradeBannerBody: t('pricingPage.estimator.upgradeBannerBody'),
+  upgradeActionLabel: t('pricingPage.estimator.upgradeActionLabel'),
+  ctaLabel: t('pricingPage.estimator.ctaLabel'),
+  ctaHref: contactHref,
+  currencyNote: t('pricingPage.estimator.currencyNote'),
+};
+
+const payments = [
+  t('pricingPage.pay1'),
+  t('pricingPage.pay2'),
+  t('pricingPage.pay3'),
+  t('pricingPage.pay4'),
+];
+
+const guarantees = [
+  t('pricingPage.g1'),
+  t('pricingPage.g2'),
+  t('pricingPage.g3'),
+  t('pricingPage.g4'),
+];
+---
+
+<PageLayout title={t('pricingPage.title')} description={t('pricingPage.description')}>
+  <MotionInit />
+  <JsonLd
+    schema={createProductSchema({
+      name: 'NegoNEX AI — Plan Starter',
+      description: t('pricingPage.starterDesc'),
+      url: pricingHref,
+      image: '/favicon.svg',
+      price: '450',
+      currency: 'USD',
+      category: 'B2B SaaS',
+    })}
+  />
+
+  <PageHero
+    eyebrow={t('pricingPage.heroEyebrow')}
+    title={t('pricingPage.heroTitle')}
+    lead={t('pricingPage.heroLead')}
+    tone="secondary"
+    class="negonex-page-hero"
+  >
+    <Breadcrumbs
+      slot="breadcrumbs"
+      items={[{ label: t('nav.home'), href: homeHref }, { label: t('nav.pricing') }]}
+    />
+    <div class="flex flex-wrap justify-center gap-3">
+      <Button variant="brand" size="lg" href="#estimador" trailingIcon="arrow-down">
+        {t('pricingPage.heroPrimaryCta')}
+      </Button>
+      <Button variant="outline" size="lg" href="#garantias">
+        {t('pricingPage.heroSecondaryCta')}
+      </Button>
+    </div>
+  </PageHero>
+
+  <Pricing
+    eyebrow={t('pricingPage.plansEyebrow')}
+    title={t('pricingPage.plansTitle')}
+    lead={t('pricingPage.plansLead')}
+    note={t('pricingPage.plansNote')}
+    class="negonex-reveal-cards negonex-interactive-cards negonex-pricing-3col"
+    plans={[
+      {
+        name: t('pricingPage.starterName'),
+        price: t('pricingPage.starterPrice'),
+        period: t('pricingPage.starterPeriod'),
+        badge: t('pricingPage.starterBadge'),
+        description: t('pricingPage.starterDesc'),
+        features: [
+          t('pricingPage.starterF1'),
+          t('pricingPage.starterF2'),
+          t('pricingPage.starterF3'),
+          t('pricingPage.starterF4'),
+          t('pricingPage.starterF5'),
+          t('pricingPage.starterF6'),
+        ],
+        cta: { label: t('pricingPage.starterCta'), href: contactHref },
+      },
+      {
+        name: t('pricingPage.enterpriseName'),
+        price: t('pricingPage.enterprisePrice'),
+        period: t('pricingPage.enterprisePeriod'),
+        badge: t('pricingPage.enterpriseBadge'),
+        highlighted: true,
+        description: t('pricingPage.enterpriseDesc'),
+        features: [
+          t('pricingPage.enterpriseF1'),
+          t('pricingPage.enterpriseF2'),
+          t('pricingPage.enterpriseF3'),
+          t('pricingPage.enterpriseF4'),
+          t('pricingPage.enterpriseF5'),
+          t('pricingPage.enterpriseF6'),
+        ],
+        cta: { label: t('pricingPage.enterpriseCta'), href: contactHref },
+      },
+      {
+        name: t('pricingPage.intelligenceName'),
+        price: t('pricingPage.intelligencePrice'),
+        period: t('pricingPage.intelligencePeriod'),
+        badge: t('pricingPage.intelligenceBadge'),
+        description: t('pricingPage.intelligenceDesc'),
+        features: [
+          t('pricingPage.intelligenceF1'),
+          t('pricingPage.intelligenceF2'),
+          t('pricingPage.intelligenceF3'),
+          t('pricingPage.intelligenceF4'),
+          t('pricingPage.intelligenceF5'),
+        ],
+        cta: { label: t('pricingPage.intelligenceCta'), href: contactHref },
+      },
+    ]}
+  />
+
+  <Band id="estimador" tone="secondary" width="wide" centered data-reveal="">
+    <PricingEstimator client:visible labels={estimatorLabels} />
+  </Band>
+
+  <Band
+    eyebrow={t('pricingPage.tableEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('pricingPage.tableTitle')}
+    lead={t('pricingPage.tableLead')}
+    width="wide"
+    centered
+    data-reveal=""
+  >
+    <Table
+      caption={t('pricingPage.tableCaption')}
+      striped
+      tabindex={0}
+      role="region"
+      aria-label={t('pricingPage.tableCaption')}
+      class="bg-card shadow-sm"
+      columns={[
+        { key: 'spec', label: t('pricingPage.colFeature'), rowHeader: true },
+        { key: 'starter', label: t('pricingPage.colStarter') },
+        { key: 'enterprise', label: t('pricingPage.colEnterprise') },
+        { key: 'intelligence', label: t('pricingPage.colIntelligence') },
+        { key: 'overage', label: t('pricingPage.colOverage') },
+      ]}
+      rows={[
+        {
+          spec: t('pricingPage.rowAudience'),
+          starter: t('pricingPage.valStarterAudience'),
+          enterprise: t('pricingPage.valEnterpriseAudience'),
+          intelligence: t('pricingPage.valIntelligenceAudience'),
+          overage: t('pricingPage.valOverageAudience'),
+        },
+        {
+          spec: t('pricingPage.rowCapacity'),
+          starter: t('pricingPage.valStarterCapacity'),
+          enterprise: t('pricingPage.valEnterpriseCapacity'),
+          intelligence: t('pricingPage.valIntelligenceCapacity'),
+          overage: t('pricingPage.valOverageCapacity'),
+        },
+        {
+          spec: t('pricingPage.rowLeadTime'),
+          starter: t('pricingPage.valStarterLead'),
+          enterprise: t('pricingPage.valEnterpriseLead'),
+          intelligence: t('pricingPage.valIntelligenceLead'),
+          overage: t('pricingPage.valOverageLead'),
+        },
+        {
+          spec: t('pricingPage.rowTeam'),
+          starter: t('pricingPage.valStarterTeam'),
+          enterprise: t('pricingPage.valEnterpriseTeam'),
+          intelligence: t('pricingPage.valIntelligenceTeam'),
+          overage: t('pricingPage.valOverageTeam'),
+        },
+        {
+          spec: t('pricingPage.rowPricing'),
+          starter: t('pricingPage.valStarterPrice'),
+          enterprise: t('pricingPage.valEnterprisePrice'),
+          intelligence: t('pricingPage.valIntelligencePrice'),
+          overage: t('pricingPage.valOveragePrice'),
+        },
+      ]}
+    />
+  </Band>
+
+  <Band
+    id="garantias"
+    tone="secondary"
+    centered
+    data-reveal=""
+    eyebrow={t('pricingPage.guaranteesEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('pricingPage.guaranteesTitle')}
+    lead={t('pricingPage.guaranteesLead')}
+  >
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2" data-reveal-stagger="">
+      <div class="bg-card border-border card-interactive rounded-xl border p-6">
+        <div class="flex items-center gap-3">
+          <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-10 shrink-0 place-items-center rounded-lg">
+            <Icon name="credit-card" size="md" />
+          </span>
+          <h3 class="font-display text-foreground text-xl font-bold">{t('pricingPage.paymentsHeading')}</h3>
+        </div>
+        <ul class="mt-5 space-y-3">
+          {
+            payments.map((item) => (
+              <li class="text-foreground-secondary flex items-start gap-2.5 text-sm leading-relaxed">
+                <Icon name="check" size="sm" class="text-brand-600 dark:text-brand-400 mt-1 shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="bg-card border-border card-interactive rounded-xl border p-6">
+        <div class="flex items-center gap-3">
+          <span class="bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 grid size-10 shrink-0 place-items-center rounded-lg">
+            <Icon name="shield-check" size="md" />
+          </span>
+          <h3 class="font-display text-foreground text-xl font-bold">{t('pricingPage.guaranteesHeading')}</h3>
+        </div>
+        <ul class="mt-5 space-y-3">
+          {
+            guarantees.map((item) => (
+              <li class="text-foreground-secondary flex items-start gap-2.5 text-sm leading-relaxed">
+                <Icon name="check" size="sm" class="text-brand-600 dark:text-brand-400 mt-1 shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Band>
+
+  <Band
+    width="narrow"
+    centered
+    data-reveal=""
+    eyebrow={t('pricingPage.faqEyebrow')}
+    eyebrowClass="negonex-eyebrow text-xs font-bold uppercase"
+    title={t('pricingPage.faqTitle')}
+  >
+    <Faq
+      bare
+      variant="card"
+      accordionClass="negonex-reveal-faq"
+      items={[
+        { question: t('pricingPage.faq1Q'), answer: t('pricingPage.faq1A') },
+        { question: t('pricingPage.faq2Q'), answer: t('pricingPage.faq2A') },
+        { question: t('pricingPage.faq3Q'), answer: t('pricingPage.faq3A') },
+        { question: t('pricingPage.faq4Q'), answer: t('pricingPage.faq4A') },
+        { question: t('pricingPage.faq5Q'), answer: t('pricingPage.faq5A') },
+        { question: t('pricingPage.faq6Q'), answer: t('pricingPage.faq6A') },
+      ]}
+    />
+  </Band>
+
+  <CtaBand
+    tone="brand"
+    eyebrow={t('home.cta.eyebrow')}
+    title={t('home.cta.title')}
+    lead={t('home.cta.lead')}
+    data-reveal=""
+  >
+    <Button variant="primary" size="lg" href={contactHref} trailingIcon="arrow-right">
+      {t('home.cta.primary')}
+    </Button>
+  </CtaBand>
+</PageLayout>
